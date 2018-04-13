@@ -183,8 +183,10 @@ app.post('/', function(req, res) {
                         request.post(url, function(err, resp, body) {
                             if (err) {
                                 return console.log(err);
-                            } 
+                            }   
                                 result = JSON.parse(body);
+                                while(result === undefined){
+                                }
                                 //console.log(result.results["0"].plate);
                                 platenumber = result.results["0"].plate;
                                 //res.end('File is uploaded ' + platenumber);
@@ -212,7 +214,6 @@ app.post('/', function(req, res) {
                         }); 
                     }
                     requestFunc(); 
-
                 }
             ],
             function(err) {
