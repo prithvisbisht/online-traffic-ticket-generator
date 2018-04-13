@@ -183,7 +183,7 @@ app.post('/', function(req, res) {
                     request.post(url, function(err, resp, body) {
                         if (err) {
                             console.log(err);
-                        } else {
+                        } else if(resp && resp.statuscode == 200){
                             result = JSON.parse(body);
                             console.log(result.results["0"].plate);
                             platenumber = result.results["0"].plate;
