@@ -8,7 +8,7 @@ var mongoose = require('mongoose');
 var bodyparser = require('body-parser');
 var cors = require('cors');
 var nodemailer = require('nodemailer');
-
+var https = require('https');
 var path = require('path');
 var multer = require('multer');
 var cloudinary = require('cloudinary');
@@ -50,7 +50,6 @@ var createPdf = function(name, vehicle_num, fileName, email) {
             Author: 'Uttarakhand Police',
         }
     });
-
     let fname = fileName + ".pdf";
 
     // Write stuff into PDF
@@ -174,48 +173,48 @@ app.post('/', function(req, res) {
                 },
                 function secondStep(image_url, done) {
                     //get licence plate number
-                    console.log(image_url);
+                    //console.log(image_url);
                     console.log("Second step called");
                     var secret_key = "sk_d9f9bc94a9b2250f1475424d";
                     var meta = "&recognize_vehicle=0&country=in&return_image=0&topn=10";
                     var url = "https://api.openalpr.com/v2/recognize_url?image_url=" + image_url + "&secret_key=" + secret_key + meta;
 
-                    request.post(url, function(err, resp, body) {
-                        if (err) {
-                            console.log(err);
-                        } else if(body){
-                            result = JSON.parse(body);
-                            //console.log(result.results["0"].plate);
-                            platenumber = result.results["0"].plate;
-                            //res.end('File is uploaded ' + platenumber);
+                    let requestFunc = () => {
+                        request.post(url, function(err, resp, body) {
+                            if (err) {
+                                console.log(err);
+                            } else if(body){
+                                result = JSON.parse(body);
+                                //console.log(result.results["0"].plate);
+                                platenumber = result.results["0"].plate;
+                                //res.end('File is uploaded ' + platenumber);
 
-                            PlateNumber.findOne({
-                                plateNumber: platenumber
-                            }, function(err, plate) {
-                                console.log(plate);
-                                if (plate === null) {
-                                    console.log("No details found in Database.");
-                                    return res.status(400).send({
-                                        message: "No details found in Database."
-                                    });
-                                } else {
-                                    console.log("Details found!");
-                                    var fname = uploadedImageName;
-                                    console.log(uploadedImageName);
-                                    fname = fname.substring(0, fname.length - 5);
-                                    console.log("\nCalling creatPdf\n");
-                                    createPdf(plate.owner, plate.plateNumber, fname, plate.email);
-                                    /*return res.status(201).send({
-                                        message: "Details found.",
-                                        plateDetails: plate
-                                    });*/
-                                    fname = fname + '.pdf';
-                                    res.render('success', {email: plate.email, number: plate.plateNumber, pdf: fname});
-                                }
-                            });
+                                PlateNumber.findOne({
+                                    plateNumber: platenumber
+                                }, function(err, plate) {
+                                    console.log(plate);
+                                    if (plate === null) {
+                                        console.log("No details found in Database.");
+                                        return res.status(400).send({
+                                            message: "No details found in Database."
+                                        });
+                                    } else {
+                                        console.log("Details found!");
+                                        var fname = uploadedImageName;
+                                        console.log(uploadedImageName);
+                                        fname = fname.substring(0, fname.length - 5);
+                                        console.log("\nCalling creatPdf\n");
+                                        createPdf(plate.owner, plate.plateNumber, fname, plate.email);
+                                        fname = fname + '.pdf';
+                                        res.render('success', {email: plate.email, number: plate.plateNumber, pdf: fname});
+                                    }
+                                });
 
-                        }
-                    });
+                            }
+                        }); 
+                    }
+                    requestFunc();
+
                 }
             ],
             function(err) {
@@ -277,5 +276,4 @@ app.post('/getPlateDetail', (req, res) => {
 var port = process.env.PORT || 3000
 app.listen(port, function() {
     console.log('Node.js listening on port ' + port);
-    console.log("Directory: " + __dirname);
 });
