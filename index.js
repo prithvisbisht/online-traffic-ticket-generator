@@ -185,7 +185,7 @@ app.post('/', function(req, res) {
                             console.log(err);
                         } else if(body){
                             result = JSON.parse(body);
-                            console.log(result.results["0"].plate);
+                            //console.log(result.results["0"].plate);
                             platenumber = result.results["0"].plate;
                             //res.end('File is uploaded ' + platenumber);
 
