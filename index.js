@@ -186,31 +186,34 @@ app.post('/', function(req, res) {
                             }   
                                 result = JSON.parse(body);
                                 while(result === undefined){
+                                    console.log("Waiting...");
                                 }
-                                //console.log(result.results["0"].plate);
-                                platenumber = result.results["0"].plate;
-                                //res.end('File is uploaded ' + platenumber);
+                                if(result !== undefined){
+                                    //console.log(result.results["0"].plate);
+                                    platenumber = result.results["0"].plate;
+                                    //res.end('File is uploaded ' + platenumber);
 
-                                PlateNumber.findOne({
-                                    plateNumber: platenumber
-                                }, function(err, plate) {
-                                    console.log(plate);
-                                    if (plate === null) {
-                                        console.log("No details found in Database.");
-                                        return res.status(400).send({
-                                            message: "No details found in Database."
-                                        });
-                                    } else {
-                                        console.log("Details found!");
-                                        var fname = uploadedImageName;
-                                        console.log(uploadedImageName);
-                                        fname = fname.substring(0, fname.length - 5);
-                                        console.log("\nCalling creatPdf\n");
-                                        createPdf(plate.owner, plate.plateNumber, fname, plate.email);
-                                        fname = fname + '.pdf';
-                                        res.render('success', {email: plate.email, number: plate.plateNumber, pdf: fname});
-                                    }
-                                });
+                                    PlateNumber.findOne({
+                                        plateNumber: platenumber
+                                    }, function(err, plate) {
+                                        console.log(plate);
+                                        if (plate === null) {
+                                            console.log("No details found in Database.");
+                                            return res.status(400).send({
+                                                message: "No details found in Database."
+                                            });
+                                        } else {
+                                            console.log("Details found!");
+                                            var fname = uploadedImageName;
+                                            console.log(uploadedImageName);
+                                            fname = fname.substring(0, fname.length - 5);
+                                            console.log("\nCalling creatPdf\n");
+                                            createPdf(plate.owner, plate.plateNumber, fname, plate.email);
+                                            fname = fname + '.pdf';
+                                            res.render('success', {email: plate.email, number: plate.plateNumber, pdf: fname});
+                                        }
+                                    });
+                                }
                         }); 
                     }
                     requestFunc(); 
