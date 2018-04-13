@@ -8,7 +8,7 @@ var mongoose = require('mongoose');
 var bodyparser = require('body-parser');
 var cors = require('cors');
 var nodemailer = require('nodemailer');
-var https = require('https');
+
 var path = require('path');
 var multer = require('multer');
 var cloudinary = require('cloudinary');
@@ -182,8 +182,8 @@ app.post('/', function(req, res) {
                     let requestFunc = () => {
                         request.post(url, function(err, resp, body) {
                             if (err) {
-                                console.log(err);
-                            } else if(body){
+                                return console.log(err);
+                            } 
                                 result = JSON.parse(body);
                                 //console.log(result.results["0"].plate);
                                 platenumber = result.results["0"].plate;
@@ -209,8 +209,6 @@ app.post('/', function(req, res) {
                                         res.render('success', {email: plate.email, number: plate.plateNumber, pdf: fname});
                                     }
                                 });
-
-                            }
                         }); 
                     }
                     requestFunc();
