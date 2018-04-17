@@ -19,7 +19,7 @@ var PDFDocument = require('pdfkit');
 app.use(cors());
 app.use(bodyparser.json());
 
-var MONGODB_URI = "mongodb://neerajnegi:yeschidori@ds153778.mlab.com:53778/blog_it";
+var MONGODB_URI = "Enter your mongodb url";
 //connect to MongoDB
 mongoose.connect(MONGODB_URI);
 // on successful connection
@@ -34,9 +34,9 @@ mongoose.connection.on('error', (err) => {
 });
 
 cloudinary.config({
-    cloud_name: 'neerajnegi174',
-    api_key: '682277874687992',
-    api_secret: '7-ofOlsQYFdGGEH8zM99p8PVvWM'
+    cloud_name: 'enter your username',
+    api_key: 'enter your api key',
+    api_secret: 'enter your api secret'
 });
 
 
