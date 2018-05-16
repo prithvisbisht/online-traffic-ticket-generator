@@ -90,7 +90,7 @@ var createPdf = function(name, vehicle_num, fileName, email) {
             secure: false,
             auth: {
                 user: 'teampetabyte@gmail.com', // generated ethereal user
-                pass: 'zen@1234' // generated ethereal password
+                pass: '' // generated ethereal password
             }
         });
         var date = Date.now();
